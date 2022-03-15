@@ -12,8 +12,8 @@ import requests
 
 parser = argparse.ArgumentParser()
 location = parser.add_mutually_exclusive_group(required=True)
-collision_regex = re.compile("(.*)[!=]=(.*)")
-avoid_regex = re.compile("(.*)[!=]==(.*)")
+collision_regex = re.compile("(.*)[!<>=]=(.*)")
+avoid_regex = re.compile("(.*)[!<>=]==(.*)")
 
 def analyze_local_file(file):
     global collision_regex
