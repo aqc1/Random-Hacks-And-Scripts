@@ -4,40 +4,54 @@
 # Searches for possible PHP/JS type juggling
 
 import argparse
-import colorama
 from colorama import Fore, Style
-from pathlib import Path
 import re
 import requests
 
+# For parsing CLI args
 parser = argparse.ArgumentParser()
 location = parser.add_mutually_exclusive_group(required=True)
+
+# Regex for detecting Type Juggling
 collision_regex = re.compile("(.*)[!<>=]=(.*)")
 avoid_regex = re.compile("(.*)[!<>=]==(.*)")
 
+# Keep track of line number/if issues were found
+line_number = 0
+found_issues = False
+
+# Regex matching
+def check_for_collision(line): return bool(re.match(collision_regex, line.strip())) and not bool(re.match(avoid_regex, line.strip()))
+
+# Yay! Pretty Colors!
+def pretty_print(line): print(f"{Fore.GREEN}[Line {line_number}]{Style.RESET_ALL} {Fore.RED}{line.strip()}{Style.RESET_ALL}")
+
+# Iterate over the lines of a local file
 def analyze_local_file(file):
-    global collision_regex
-
-    # Keep track of line #
-    # Keep track if issue was found
-    line_number = 0
-    found_issues = False
-
-    # Read local file
+    global line_number, found_issues
     with open(file, "r") as handle:
         while True:
             line = handle.readline()
             if line:
                 line_number += 1
-
-                # Possible collisions
-                if bool(re.match(collision_regex, line.strip())) and not bool(re.match(avoid_regex, line.strip())):
+                if check_for_collision(line):
                     found_issues = True
-                    print(f"{Fore.GREEN}[Line {line_number}]{Style.RESET_ALL} {Fore.RED}{line.strip()}{Style.RESET_ALL}")
+                    pretty_print(line)
             else:
                 break
         if not found_issues:
             print("[-] No type juggling issues found...")
+
+# Iterate over the lines of a GET request
+def analyze_remote_code(req):
+    global line_number, found_issues
+    for line in req.iter_lines(): 
+        line_number += 1
+        if check_for_collision(line.decode()):
+            found_issues = True
+            pretty_print(line.decode())
+    if not found_issues:
+        print("[-] No type juggling issues found...")
 
 def main():
     # Get Arguments
@@ -46,16 +60,12 @@ def main():
     location.add_argument("--remote", "-r", action="store_true")
     args = parser.parse_args()
 
+    # Parse depending on args
     if args.local:
         analyze_local_file(args.file)
     elif args.remote:
         req = requests.get(args.file, "html.parser")
-        remote_file = Path("remote_source_code")
-        remote_file.touch()
-        with open(remote_file, "w+") as output:
-            output.write(req.text)
-            output.close()
-        analyze_local_file(remote_file)
+        analyze_remote_code(req)
 
 if __name__ == "__main__":
-        main()
+    main()
