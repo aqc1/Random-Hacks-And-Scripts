@@ -55,9 +55,9 @@ def analyze_remote_code(req):
 
 def main():
     # Get Arguments
-    parser.add_argument("--file", "-f", type=str, required=True)
-    location.add_argument("--local", "-l", action="store_true")
-    location.add_argument("--remote", "-r", action="store_true")
+    parser.add_argument("--file", "-f", type=str, required=True, help="Local/Remote File to Scan")
+    location.add_argument("--local", "-l", action="store_true", help="Scan Local File")
+    location.add_argument("--remote", "-r", action="store_true", help="Scan Remote File")
     args = parser.parse_args()
 
     # Parse depending on args
