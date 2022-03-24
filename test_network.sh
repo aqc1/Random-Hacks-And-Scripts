@@ -13,8 +13,8 @@ print_error() {
     echo -e "${RED}\n[-] ${1}${RESET}"
 }
 
-# Grab IP that's not loopback
-ip=$(ip -br a | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v "127.0.0.1")
+# Grab IP that's not loopback or docker
+ip=$(ip -br a | grep -v "docker" | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v "127.0.0.1")
 
 # Ping yourself
 print_info "Pinging IP of self..."
