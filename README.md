@@ -9,3 +9,5 @@ Not saying this is good code...but just a few items put together to achieve smal
 - `type_juggling.py`: A script to scan source code for type juggling vulns.
 
 - `test_network.sh`: A script to test basic network connection.
+
+- `dns_enum.py`: A script to enumerate DNS records of a domain.
