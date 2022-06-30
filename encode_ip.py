@@ -7,6 +7,7 @@ import random
 import re
 import sys
 
+
 class IP_Encoder:
     def __init__(self, ip: str):
         self.ip = ip
@@ -34,10 +35,10 @@ class IP_Encoder:
         return self.to_hex(self.raw_decimal())
 
     def octal_octets(self) -> str:
-        return ".".join([ self.to_octal(octet) for octet in self.octets ])
+        return ".".join([self.to_octal(octet) for octet in self.octets])
 
     def hex_octets(self) -> str:
-        return ".".join([ self.to_hex(octet) for octet in self.octets ])
+        return ".".join([self.to_hex(octet) for octet in self.octets])
 
     def random_octet_encoding(self) -> str:
         operations = [
@@ -54,14 +55,18 @@ class IP_Encoder:
     def random_octet_encoding_with_padding(self) -> str:
         operations = [
             lambda x: x,
-            lambda x: "0" * random.randint(4,9) + self.to_octal(x),
-            lambda x: self.to_hex(x).replace("0x", "0x" + "0" * random.randint(4,9))
+            lambda x: "0" * random.randint(4, 9) + self.to_octal(x),
+            lambda x: self.to_hex(x).replace(
+                "0x",
+                "0x" + "0" * random.randint(4, 9)
+            )
         ]
         encoded_octets = list()
         for octet in self.octets:
             operation = random.choice(operations)
             encoded_octets.append(operation(octet))
         return ".".join(encoded_octets)
+
 
 def main():
     initial_ip = input("IP Address: ")
@@ -76,9 +81,12 @@ def main():
     print(f"\t[>] Octal Octets      : {encoder.octal_octets()}")
     print(f"\t[>] Hexadecimal Octets: {encoder.hex_octets()}")
     print("[+] Random Octet Encodings")
-    for _ in range(5): print(f"\t[>] {encoder.random_octet_encoding()}")
+    for _ in range(5):
+        print(f"\t[>] {encoder.random_octet_encoding()}")
     print("[+] Random Octet Encodings with Random Padding")
-    for _ in range(5): print(f"\t[>] {encoder.random_octet_encoding_with_padding()}")
+    for _ in range(5):
+        print(f"\t[>] {encoder.random_octet_encoding_with_padding()}")
+
 
 def usage():
     print("[-] Invalid IP Address!")

@@ -20,11 +20,19 @@ avoid_regex = re.compile("(.*)[!<>=]==(.*)")
 line_number = 0
 found_issues = False
 
+
 # Regex matching
-def check_for_collision(line): return bool(re.match(collision_regex, line.strip())) and not bool(re.match(avoid_regex, line.strip()))
+def check_for_collision(line):
+    collides = bool(re.match(collision_regex, line.strip()))
+    false_positive = bool(re.match(avoid_regex, line.strip()))
+    return collides and not false_positive
+
 
 # Yay! Pretty Colors!
-def pretty_print(line): print(f"{Fore.GREEN}[Line {line_number}]{Style.RESET_ALL} {Fore.RED}{line.strip()}{Style.RESET_ALL}")
+def pretty_print(line):
+    print(f"{Fore.GREEN}[Line {line_number}]{Style.RESET_ALL} "
+          f"{Fore.RED}{line.strip()}{Style.RESET_ALL}")
+
 
 # Iterate over the lines of a local file
 def analyze_local_file(file):
@@ -42,10 +50,11 @@ def analyze_local_file(file):
         if not found_issues:
             print("[-] No type juggling issues found...")
 
+
 # Iterate over the lines of a GET request
 def analyze_remote_code(req):
     global line_number, found_issues
-    for line in req.iter_lines(): 
+    for line in req.iter_lines():
         line_number += 1
         if check_for_collision(line.decode()):
             found_issues = True
@@ -53,11 +62,28 @@ def analyze_remote_code(req):
     if not found_issues:
         print("[-] No type juggling issues found...")
 
+
 def main():
     # Get Arguments
-    parser.add_argument("--file", "-f", type=str, required=True, help="Local/Remote File to Scan")
-    location.add_argument("--local", "-l", action="store_true", help="Scan Local File")
-    location.add_argument("--remote", "-r", action="store_true", help="Scan Remote File")
+    parser.add_argument(
+        "--file",
+        "-f",
+        type=str,
+        required=True,
+        help="Local/Remote File to Scan"
+    )
+    location.add_argument(
+        "--local",
+        "-l",
+        action="store_true",
+        help="Scan Local File"
+    )
+    location.add_argument(
+        "--remote",
+        "-r",
+        action="store_true",
+        help="Scan Remote File"
+    )
     args = parser.parse_args()
 
     # Parse depending on args
