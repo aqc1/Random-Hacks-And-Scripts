@@ -9,6 +9,13 @@ RECORDS = ["A", "AAAA", "NS", "CNAME", "MX", "PTR", "SOA", "TXT"]
 
 # Resolve DNS record
 def resolve_record(host, record_type):
+    """
+    Print out resolved records
+    :param host:
+        host to resolve DNS records for
+    :param record_type:
+        type od DNS record to resolve
+    """
     print(f"\n{record_type} Records")
     print("=" * len(f"{record_type} Records"))
     try:

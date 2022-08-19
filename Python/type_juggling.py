@@ -23,6 +23,13 @@ found_issues = False
 
 # Regex matching
 def check_for_collision(line):
+    """
+    Check for a valid type collision
+    :param line:
+        line of code to evaluate
+    :return:
+        bool - if it is a valid collision
+    """
     collides = bool(re.match(collision_regex, line.strip()))
     false_positive = bool(re.match(avoid_regex, line.strip()))
     return collides and not false_positive
@@ -30,12 +37,22 @@ def check_for_collision(line):
 
 # Yay! Pretty Colors!
 def pretty_print(line):
+    """
+    Pretty print line of code
+    :param line:
+        line of code to print
+    """
     print(f"{Fore.GREEN}[Line {line_number}]{Style.RESET_ALL} "
           f"{Fore.RED}{line.strip()}{Style.RESET_ALL}")
 
 
 # Iterate over the lines of a local file
 def analyze_local_file(file):
+    """
+    Scan a local file for type collision
+    :param file:
+        file to scan over
+    """
     global line_number, found_issues
     with open(file, "r") as handle:
         while True:
@@ -53,6 +70,11 @@ def analyze_local_file(file):
 
 # Iterate over the lines of a GET request
 def analyze_remote_code(req):
+    """
+    Scan a web request for type collision
+    :param req:
+        web request to scan over
+    """
     global line_number, found_issues
     for line in req.iter_lines():
         line_number += 1
