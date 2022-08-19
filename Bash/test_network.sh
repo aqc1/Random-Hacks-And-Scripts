@@ -56,8 +56,7 @@ done
 
 # Ping yourself
 print_info "Pinging IP of self..."
-if (( verbose == 0 ))
-then
+if (( verbose == 0 )); then
     quiet_ping "$ip" "Issue with NIC."
 else
     verbose_ping "$ip" "Issue with NIC."
@@ -68,8 +67,7 @@ print_info "Pinging default gateway..."
 set -f
 octets=("${ip//./ }")
 gateway="${octets[0]}.${octets[1]}.${octets[2]}.1"
-if (( verbose == 0 ))
-then
+if (( verbose == 0 )); then
     quiet_ping "$gateway" "Issue with router."
 else
     verbose_ping "$gateway" "Issue with router."
@@ -77,8 +75,7 @@ fi
 
 # Ping Google DNS server
 print_info "Pinging Google DNS server..."
-if (( verbose == 0 ))
-then
+if (( verbose == 0 )); then
     quiet_ping "8.8.8.8" "Issue with ISP."
 else
     verbose_ping "8.8.8.8" "Issue with ISP."
@@ -86,8 +83,7 @@ fi
 
 # Ping google.com
 print_info "Pinging Google's domain name..."
-if (( verbose == 0 ))
-then
+if (( verbose == 0 )); then
     quiet_ping "google.com" "Issue with DNS." 
 else
     verbose_ping "google.com" "Issue with DNS."
