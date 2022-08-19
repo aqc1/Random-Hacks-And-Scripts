@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 # Script to analyze PHP/JS code
 # Searches for possible PHP/JS type juggling

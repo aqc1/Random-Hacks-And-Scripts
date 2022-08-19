@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 # Script asks for an IP address to encode in various ways
 # Useful for bypassing regex in WAFs for matching IP addresses
