@@ -6,16 +6,20 @@ GREEN=$(tput setaf 2)
 RESET=$(tput sgr0)
 
 # Green for Information
+# :param $1: Message to print
 print_info() {
     echo -e "${GREEN}\n[+] ${1}${RESET}"
 }
 
 # Red for Errors
+# :param $1: Message to print
 print_error() {
     echo -e "${RED}\n[-] ${1}${RESET}"
 }
 
 # Less verbose output
+# :param $1: Host to ping
+# :param $2: Error message to output if something goes wrong
 quiet_ping() {
     target="$1"
     err_msg="$2"
@@ -26,6 +30,8 @@ quiet_ping() {
 }
 
 # More verbose output
+# :param $1: Host to ping
+# :param $2: Error message to output if something goes wrong
 verbose_ping() {
     target="$1"
     err_msg="$2"
