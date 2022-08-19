@@ -1,4 +1,6 @@
 # Function to Find NetworkID When Given an IPv4 Subnet
+# :param $IPv4: IPv4 address in CIDR
+# :return: NetworkID of subnet
 Function findNetworkID{
     Param(
         [String] $IPv4
@@ -10,10 +12,10 @@ Function findNetworkID{
 
     # Turn Subnet Mask into a Byte String
     [String] $subnetString = ''
-    For([Int]$i = 0; $i -lt $subnetMaskCidr; $i = $i + 1){
+    For([Int]$i = 0; $i -lt $subnetMaskCidr; $i = $i + 1) {
         $subnetString = $subnetString + '1'
     }
-    For([Int]$i = $subnetMaskCidr; $i -lt 32; $i = $i + 1){
+    For([Int]$i = $subnetMaskCidr; $i -lt 32; $i = $i + 1) {
         $subnetString = $subnetString + '0'
     }
 
@@ -29,7 +31,7 @@ Function findNetworkID{
     # Create the NetworkID One Octet at a Time
     # NetworkID = IP -and Subnet Mask
     [String[]] $networkIdOctets = @()
-    For([Int]$i = 0; $i -lt 4; $i++){
+    For([Int]$i = 0; $i -lt 4; $i++) {
         $networkIdOctets += [Convert]::ToInt32([Convert]::ToString([Convert]::ToInt32($octets[$i],2) -bAnd [Convert]::ToInt32($subnet[$i],2),2), 2).ToString()
     }
     
@@ -40,6 +42,8 @@ Function findNetworkID{
 
 
 # Function to Find First Usable Address When Given the NetworkID
+# :param $networkID: Network ID of subnet
+# :return: First Usable Address in subnet
 function findFirstUsable{
     Param(
         [String] $networkID
@@ -58,6 +62,8 @@ function findFirstUsable{
 
 
 # Function to Find the Wildcard Given the IPv4 Subnet
+# :param $IPv4: IPv4 Address in CIDR
+# :return: Wildcard (Variation of Subnet Mask)
 function findWildcard{
     Param(
         [String] $IPv4
@@ -70,10 +76,10 @@ function findWildcard{
     # Turn Wildcard into a Byte String
     # Done by Creating the Subnet Mask Byte String, Then Reversing the Octets
     [String] $wildcardString = ""
-    For([Int]$i = 0; $i -lt $wildcardNumber; $i = $i + 1){
+    For([Int]$i = 0; $i -lt $wildcardNumber; $i = $i + 1) {
         $wildcardString = $wildcardString + '1'
     }
-    For([Int]$i = $wildcardNumber; $i -lt 32; $i = $i + 1){
+    For([Int]$i = $wildcardNumber; $i -lt 32; $i = $i + 1) {
         $wildcardString = $wildcardString + '0'
     }
     $temp = $wildcardString.ToCharArray()
@@ -94,6 +100,9 @@ function findWildcard{
 
 
 # Function to Find the Broadcast Address Given the NeworkID and the Wildcard
+# :param $networkID: Network ID of subnet
+# :param $wildcard: Wildcard (Variation of subnet mask)
+# :return: Broadcast address of subnet
 function findBroadcast{
     Param(
         [Parameter(Position = 0)]
@@ -109,7 +118,7 @@ function findBroadcast{
     # Calculate Broadcast Address
     # Broadcast = NetworkID -or Wildcard
     [String[]] $broadcastOctets = @()
-    for([Int]$i = 0; $i -lt 4; $i++){
+    for([Int]$i = 0; $i -lt 4; $i++) {
         $broadcastOctets += [Convert]::ToInt32([Convert]::ToString($networkIdOctets[$i] -bOr [Convert]::ToInt32($wildcardOctets[$i],2),2), 2).ToString()
     }
   
@@ -120,6 +129,8 @@ function findBroadcast{
 
 
 # Function to Find Last Usable Address When Given the Broadcast
+# :param $broadcast: Broadcast Address of subnet
+# :return: Last Usable Address of subnet
 function findLastUsable{
     Param(
         [String] $broadcast
@@ -137,6 +148,8 @@ function findLastUsable{
 }
 
 # Function to Find Number of Hosts Available When Given the CIDR Address
+# :param $IPv4: IPv4 Address in CIDR
+# :return: Number of hosts in subnet
 function getNumOfHosts{
     Param(
         [String] $IPv4
@@ -147,10 +160,10 @@ function getNumOfHosts{
 
     # Calculate the Number of Usable Hosts and Return
     # Number of Hosts = (2 ^ (32 - n)) - 2
-    If($subnetMask -eq 31){
+    If($subnetMask -eq 31) {
         return "0 [For Point-to-Point Use Only]"
     }
-    If($subnetMask -eq 32){
+    If($subnetMask -eq 32) {
         return "0 [Isolated]"
     }
     [Int] $hosts = ([Math]::Pow(2, (32 - $subnetMask)) - 2)
@@ -165,40 +178,37 @@ function getNumOfHosts{
 [String] $IPv4 = Read-Host("Enter IPv4 Address in CIDR Notation (/24 by Default)")
 
 # Sanitize Input via Regex and Iteration
-If($IPv4 -NotMatch $IPRegex){
+If($IPv4 -NotMatch $IPRegex) {
     # Not an IPv4 Address
     Write-Host("Entered IP Address Not Valid.") 
     Exit
-}
-Else{
+} Else {
     [Boolean] $hasMask = $IPv4 -Match "/"
     [String[]] $IPOctets = @()
-    If($hasMask){
+    If($hasMask) {
         $IPOctets = $IPv4.Split("/")[0].Split(".")
-    }
-    Else{
+    } Else {
         $IPOctets = $IPv4.Split(".")
     }
-    If([Convert]::ToInt32($IPOctets[0]) -lt 1){
+    If([Convert]::ToInt32($IPOctets[0]) -lt 1) {
         # First Octet cannot be < 1
         Write-Host("Entered IP has Invalid Octets")  
         Exit
     }
     $IPOctets | 
         ForEach-Object {
-            If([Convert]::ToInt64($_) -gt 255){
+            If([Convert]::ToInt64($_) -gt 255) {
                 # Octets Cannot be > 255
                 Write-Host("Entered IP has Invalid Octets") 
                 Exit
             }
         }
-    If(-not($hasMask)){
+    If(-not($hasMask)) {
         $IPv4 += "/24"
-    }
-    Else{
+    } Else {
         [Int64] $convertedMask = [Convert]::ToInt64($IPv4.Split("/")[1])
         # Subnet Mask Cannot be > 32 or < 1
-        If($convertedMask -gt 32 -or $convertedMask -lt 1){  
+        If($convertedMask -gt 32 -or $convertedMask -lt 1) {  
             $temp = $IPv4.Split("/")[0]
             $IPv4 = $temp + "/24"
         }
