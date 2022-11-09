@@ -6,8 +6,6 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 from scapy.all import *
 
-subnet = "10.0.0.157/24"
-
 def broadcast(ip: str) -> list:
     """
     Use an ARP broadcast for network discovery
