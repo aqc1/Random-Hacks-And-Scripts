@@ -10,6 +10,14 @@ import sys
 
 
 class IP_Encoder:
+    """
+    Class to define methods of encoding IPv4 addresses
+
+    ip (str)
+        An IPv4 address
+    octets (list)
+        An IP address split into its octets
+    """
     def __init__(self, ip: str):
         self.ip = ip
         self.octets = ip.split(".")
