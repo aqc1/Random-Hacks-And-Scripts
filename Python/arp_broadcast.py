@@ -7,12 +7,12 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import *
 
 def broadcast(ip: str) -> list:
-    """
-    Use an ARP broadcast for network discovery
-    :param subnet:
-        subnet for ARP packet
-    :return:
-        list of clients
+    """Use an ARP broadcast for network discovery
+    Args:
+        ip (str): IP Address
+    
+    Returns:  
+        list: Clients
     """
     # Create Packet
     arp_request = ARP(pdst=ip)
