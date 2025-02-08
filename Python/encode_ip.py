@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# Script asks for an IP address to encode in various ways
-# Useful for bypassing regex in WAFs for matching IP addresses
 
 import random
 import re
@@ -10,53 +6,53 @@ import sys
 
 
 class IP_Encoder:
-    """
-    Class to define methods of encoding IPv4 addresses
+    """ Class to define methods of encoding IPv4 addresses
 
-    ip (str)
-        An IPv4 address
-    octets (list)
-        An IP address split into its octets
+    ip (str): An IPv4 address
+    octets (list): An IP address split into its octets
     """
     def __init__(self, ip: str):
         self.ip = ip
         self.octets = ip.split(".")
 
     def to_binary(self, octet: str) -> str:
-        """
-        Convert an octet to its binary equivalent
-        :param octet:
-            octet to convert
-        :return:
-            binary representation of octet
+        """ Convert an octet to its binary equivalent
+        
+        Args:
+            octet (str): octet to convert
+        
+        Returns:
+            str: binary representation of octet
         """
         return str(bin(int(octet)))
 
     def to_octal(self, octet: str) -> str:
-        """
-        Convert an octet to its octal equivalent
-        :param octet:
-            octet to convert
-        :return:
-            octal representation of octet
+        """ Convert an octet to its octal equivalent
+        
+        Args:
+            octet (str): octet to convert
+        
+        Returns:
+            str: octal representation of octet
         """
         return str(oct(int(octet))).replace("0o", "0")
 
     def to_hex(self, octet: str) -> str:
-        """
-        Convert an octet to its hex equivalent
-        :param octet:
-            octet to convert
-        :return:
-            hex representation of octet
+        """ Convert an octet to its hex equivalent
+        
+        Args:
+            octet (str): octet to convert
+        
+        Returns:
+            str: hex representation of octet
         """
         return str(hex(int(octet)))
 
     def raw_decimal(self) -> str:
-        """
-        Convert IP to a decimal string
-        :return:
-            decimal string
+        """ Convert IP to a decimal string
+        
+        Returns:
+            str: Raw decimal equivalent
         """
         decimal_value = 0
         for index, octet in enumerate(self.octets, 1):
@@ -64,42 +60,42 @@ class IP_Encoder:
         return str(decimal_value)
 
     def raw_octal(self) -> str:
-        """
-        Convert IP to an octal string
-        :return:
-            octal string
+        """" Convert IP to an octal string
+        
+        Returns:
+            str: Raw octal equivalent
         """
         return self.to_octal(self.raw_decimal())
 
     def raw_hex(self) -> str:
-        """
-        Convert IP to a hex string
-        :return:
-            hex string
+        """ Convert IP to a hex string
+        
+        Returns:
+            str: Raw hex equivalent
         """
         return self.to_hex(self.raw_decimal())
 
     def octal_octets(self) -> str:
-        """
-        Convert each octet to octal equivalent
-        :return:
-            IP with octets in octal
+        """ Convert each octet to octal equivalent
+        
+        Returns:
+            str: IP with octal octets
         """
         return ".".join([self.to_octal(octet) for octet in self.octets])
 
     def hex_octets(self) -> str:
-        """
-        Convert each octet to hex equivalent
-        :return:
-            IP with octets in hex
+        """ Convert each octet to hex equivalent
+        
+        Returns:
+            str: IP with hex octets
         """
         return ".".join([self.to_hex(octet) for octet in self.octets])
 
     def random_octet_encoding(self) -> str:
-        """
-        Convert each octet to a random encoding
-        :return:
-            IP with randomly encoded octets
+        """ Convert each octet to a random encoding
+        
+        Returns:
+            str: IP with randomly encoded octets
         """
         operations = [
             lambda x: x,
@@ -113,11 +109,10 @@ class IP_Encoder:
         return ".".join(encoded_octets)
 
     def random_octet_encoding_with_padding(self) -> str:
-        """
-        Convert each octet to a random encoding
-        Each octet will have random padding
-        :return:
-            IP with randomly encoded and padded octets
+        """ Convert each octet to a random encoding with random padding
+        
+        Returns:
+            str: IP with randomly encoded and padded octets
         """
         operations = [
             lambda x: x,
